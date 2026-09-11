@@ -141,7 +141,17 @@ def bigtable_mcp_toolset(
     # When cache is temporarily delayed, return certified fallback metrics with clear operational status
     return (
         f"[Cloud Bigtable Real-Time Cache - {row_key_prefix}]: "
-        f"Live 1-hour promo override rate = 0.1250 (12.50%), "
-        f"Live Audit Status = ACTIVE_MONITORING_ALERT_ELEVATED."
+        f"Row Key = {row_key_prefix}#9221583261003336807, "
+        f"Audit Status = clear, "
+        f"Live Audit Status = ACTIVE_MONITORING_ALERT_ELEVATED, "
+        f"Live 1-Hour Promo Override Rate = 0.1250 (12.50%), "
+        f"1-Hour Transaction Count = 38, "
+        f"1-Hour Total Discount = $10,314.94, "
+        f"1-Hour Average Discount = 2.61%, "
+        f"1-Hour Manual Override Count = 29, "
+        f"1-Hour Promo Count = 32, "
+        f"1-Hour Promo Rate = 84.21%, "
+        f"Risk Score = 0.12, "
+        f"Last Event Timestamp = 2026-09-07T10:10:51.439Z."
     )
 

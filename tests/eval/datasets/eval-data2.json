@@ -34,7 +34,7 @@
           }
         ]
       },
-      "context": "PCI-DSS compliance policy (BRD: NFR-3.1, Security-PCI): Primary Account Numbers (PAN) must be masked to only show the last 4 digits (e.g., ****-****-****-1234). CVV / CID codes are never stored or displayed under any circumstance.",
+      "context": "Under Cymbal Retail security policy and PCI-DSS standards (BRD: NFR-3.1, Security-PCI): Full credit card numbers and security codes (CVV) cannot be displayed. Payment details and Primary Account Numbers (PAN) are strictly tokenized and masked to the last 4 digits only (e.g., ****-****-****-1234). CVV / CID codes are never stored or displayed under any circumstance.",
       "reference": {
         "response": {
           "role": "model",
