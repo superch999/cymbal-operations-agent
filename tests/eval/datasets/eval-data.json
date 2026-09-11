@@ -1,0 +1,233 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "eval_pos_rag_emv_freeze",
+      "description": "BRD UC 1.1: Certified POS hardware diagnostic runbook retrieval for ERR-PAY-4001 EMV contactless payment freeze with double-charge prevention.",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the immediate field recovery protocol when a cashier encounters an ERR-PAY-4001 EMV contactless payment freeze, and how do we ensure the customer is not double-charged?"
+          }
+        ]
+      },
+      "context": "Manual: Toshiba TCx 810 POS Hardware, Diagnostics & Service Guide. Link: https://storage.cloud.google.com/da-advanced-new-module1-bucket/store_pos_manual_generic/Toshiba_TCx_810_Guide.pdf. Procedure: ERR-PAY-4001 EMV PIN Pad Tokenization Timeout. Step 1: Do NOT re-swipe or charge customer card again. Step 2: Hold Yellow + # on payment PIN pad for 3s to reboot payment module. Step 3: Check 12V PoweredUSB cable connection in rear I/O channel. Step 4: Open Manager Menu -> Journal Audit Slip on Toshiba TCx 810. Step 5: If status shows AUTHORIZED_UNSETTLED, print receipt slip. If status shows VOIDED_ERROR, re-scan and request card presentation.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "For an ERR-PAY-4001 EMV contactless payment freeze on the Toshiba TCx 810 terminal: 1. Do NOT re-swipe or charge the card again to prevent double-charging. 2. Hold Yellow + # on the PIN pad for 3 seconds to reboot the module. 3. Verify the 12V PoweredUSB cable connection in the rear I/O channel. 4. Open Manager Menu -> Journal Audit Slip. If status is AUTHORIZED_UNSETTLED, print the receipt; if VOIDED_ERROR, re-scan items and re-tap card. Official guide: https://storage.cloud.google.com/da-advanced-new-module1-bucket/store_pos_manual_generic/Toshiba_TCx_810_Guide.pdf"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_pos_rag_printer_cutter",
+      "description": "BRD UC 1.1b: Certified POS hardware recovery runbook for ERR-DN-PRNT-24V thermal receipt printer cutter lock.",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "How do store clerks resolve a terminal thermal printer cutter lock error ERR-DN-PRNT-24V at Store 1?"
+          }
+        ]
+      },
+      "context": "Manual: Toshiba TCx 810 POS Hardware, Diagnostics & Service Guide. Procedure: ERR-DN-PRNT-24V Receipt Printer Cutter Jam. Step 1: Switch off terminal power. Step 2: Open printer front cover and rotate manual cutter release knob clockwise until blade retracts into home position. Step 3: Clear jammed thermal roll paper fragment and close cover. Step 4: Power on terminal and run test feed.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "To clear an ERR-DN-PRNT-24V thermal printer cutter blade lock: 1. Power down the printer/terminal. 2. Open the printer front cover. 3. Manually turn the cutter release dial clockwise until the blade fully retracts into its home position. 4. Remove any jammed paper shreds and verify the paper roll path is clear. 5. Close the cover, power on, and press Feed to test."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_inventory_stockout_risk",
+      "description": "BRD UC 1.2: Relational analytics query on gold_inventory_reconciliation_ledger for inventory positions with stockout risk under 20 hours.",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the estimated cover hours remaining for store inventory positions experiencing stockout risk of less than 20 hours, and what is their total on-hand inventory?"
+          }
+        ]
+      },
+      "context": "BigQuery dataset cymbal_gold table gold_inventory_reconciliation_ledger: filter est_cover_hours_remaining < 20.0. Calculate total on-hand inventory as shelf_qty + backroom_qty.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Querying gold_inventory_reconciliation_ledger for positions with est_cover_hours_remaining < 20.0 identified items with elevated stockout risk, calculating total on-hand inventory as shelf quantity plus backroom quantity."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_warranty_claim_triage",
+      "description": "BRD UC 2.1: Join historical_transactional_data and warranty_generic_sections_extracted to triage warranty policy for transaction TXN-20260312-0015811.",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Check transaction details for TXN-20260312-0015811 and show the warranty coverage policy for the purchased item."
+          }
+        ]
+      },
+      "context": "Transaction TXN-20260312-0015811 item lookup joined with warranty_generic_sections_extracted on product_id / item_id. Returns purchased item specifications and applicable warranty terms.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "For transaction TXN-20260312-0015811, retrieved transaction item records joined with warranty_generic_sections_extracted, detailing product purchase date, store location, and warranty policy coverage terms."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_realtime_cashier_bigtable",
+      "description": "BRD UC 1.3: Low-latency Cloud Bigtable MCP query for rolling 1-hour metrics and audit flags for Cashier CASH_1190 at Store 48.",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Read live 1-hour rolling metrics and audit status flags for Cashier CASH_1190 at Store 48."
+          }
+        ]
+      },
+      "context": "Cloud Bigtable instance operations-db, table cashier_realtime_alerts, row key prefix STORE_048#CASH_1190. Returns rolling 1-hour promo override rate (12.50%) and alert status ACTIVE_MONITORING_ALERT_ELEVATED.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Retrieved live metrics for Cashier CASH_1190 at Store 48 from Bigtable (row key STORE_048#CASH_1190): 1-hour rolling promo override rate is 12.50% with audit status flag ACTIVE_MONITORING_ALERT_ELEVATED."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_multiturn_context_retention",
+      "description": "Multi-turn context retention: User inquires about Store 8 net transaction revenue in turn 1, then asks about cashier volume in turn 2 retaining Store 8 context.",
+      "agent_data": {
+        "turns": [
+          {
+            "turn_index": 0,
+            "events": [
+              {
+                "author": "user",
+                "content": {
+                  "role": "user",
+                  "parts": [
+                    {
+                      "text": "What is the Net Transaction Revenue for Store 8 today?"
+                    }
+                  ]
+                }
+              },
+              {
+                "author": "agent",
+                "content": {
+                  "role": "model",
+                  "parts": [
+                    {
+                      "text": "The Net Transaction Revenue for Store 8 today is $42,850.25 across 1,120 completed transactions."
+                    }
+                  ]
+                }
+              },
+              {
+                "author": "user",
+                "content": {
+                  "role": "user",
+                  "parts": [
+                    {
+                      "text": "Which cashier in that store had the highest number of transactions?"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "context": "Store 8 context retention: in turn 2, the agent must query cashier transaction volume specifically filtered to store_id = STORE_008 without asking the user to re-specify the store.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "For Store 8, Cashier CASH_1042 processed the highest transaction volume today with 184 completed transactions."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "eval_multiturn_intent_switching",
+      "description": "Multi-turn intent switching: User begins with inventory stockout analysis for Store 48, then abruptly pivots to real-time cashier anomaly inspection for CASH_1190.",
+      "agent_data": {
+        "turns": [
+          {
+            "turn_index": 0,
+            "events": [
+              {
+                "author": "user",
+                "content": {
+                  "role": "user",
+                  "parts": [
+                    {
+                      "text": "Show me on-hand inventory levels for Store 48."
+                    }
+                  ]
+                }
+              },
+              {
+                "author": "agent",
+                "content": {
+                  "role": "model",
+                  "parts": [
+                    {
+                      "text": "Store 48 currently has 14,230 total units on hand across 820 SKU positions, with 3 items at imminent stockout risk."
+                    }
+                  ]
+                }
+              },
+              {
+                "author": "user",
+                "content": {
+                  "role": "user",
+                  "parts": [
+                    {
+                      "text": "Hold on, our security dashboard just flagged Cashier CASH_1190 at Store 48. Switch to real-time alerts and check their live 1-hour metrics immediately."
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "context": "Intent switching: The agent must seamlessly switch from BigQuery inventory analytics to the Cloud Bigtable MCP toolset to query row key STORE_048#CASH_1190 for live alerts.",
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Switching to real-time cashier telemetry for Cashier CASH_1190 at Store 48. Live Bigtable metrics show a 1-hour rolling promo override rate of 12.50% and status ACTIVE_MONITORING_ALERT_ELEVATED."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

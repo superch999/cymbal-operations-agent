@@ -1,8 +1,12 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from google.adk.agents import Agent
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
+from google.adk.plugins.bigquery_agent_analytics_plugin import BigQueryAgentAnalyticsPlugin
 
 from app.tools.analytics_tool import cymbal_analytics_tool
 from app.tools.rag_tool import pos_troubleshooting_rag_tool
@@ -10,6 +14,9 @@ from app.tools.bigtable_tool import bigtable_mcp_toolset
 from app.tools.store_resolver_tool import store_resolver_tool
 
 MODEL = "gemini-3.6-flash"
+PROJECT_ID = os.getenv("PROJECT_ID", "haochi-data-advanced")
+BQ_TELEMETRY_DATASET = os.getenv("BQ_TELEMETRY_DATASET", "agent_telemetry")
+REGION = os.getenv("REGION", "us-central1")
 
 COORDINATOR_SYSTEM_INSTRUCTION = """
 You are `cymbal_operations_agent`, the root AI Operations & Analytics Coordinator for Cymbal Retail.
@@ -50,7 +57,14 @@ root_agent = Agent(
     ],
 )
 
+bq_analytics_plugin = BigQueryAgentAnalyticsPlugin(
+    project_id=PROJECT_ID,
+    dataset_id=BQ_TELEMETRY_DATASET,
+    location=REGION,
+)
+
 app = App(
     root_agent=root_agent,
     name="app",
+    plugins=[bq_analytics_plugin],
 )
