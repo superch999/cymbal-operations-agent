@@ -16,7 +16,12 @@
 import pytest
 from unittest.mock import MagicMock
 from app.tools.rag_tool import pos_troubleshooting_rag_tool, SDD_REJECTION_STRING
-from app.tools.analytics_tool import cymbal_analytics_tool, PARTITION_CLARIFICATION_PROMPT, query_federated_lakehouse_transactions
+from app.tools.analytics_tool import (
+    cymbal_analytics_tool,
+    PARTITION_CLARIFICATION_PROMPT,
+    PCI_DSS_CLARIFICATION_PROMPT,
+    query_federated_lakehouse_transactions,
+)
 from app.tools.bigtable_tool import bigtable_mcp_toolset
 from app.tools.store_resolver_tool import store_resolver_tool
 from app.agent import manage_dialogue_state_and_temporal_invalidation
@@ -82,10 +87,18 @@ def test_uc_2_3_cross_cloud_lakehouse_audit() -> None:
 
 
 def test_mandatory_partition_guardrail() -> None:
-    """Mandatory partition clarification guardrail blocks unpartitioned wide table scans."""
+    """BRD: NFR-4.1, Cost-Opt: Mandatory partition clarification guardrail blocks unpartitioned wide table scans."""
     result = cymbal_analytics_tool("What is the total sales across all Cymbal Retail stores?")
     assert result == PARTITION_CLARIFICATION_PROMPT
     assert "Partition boundaries are required" in result
+
+
+def test_guardrail_pii_card_masking() -> None:
+    """BRD: NFR-3.1, Security-PCI: Verify PCI-DSS compliance and card masking guardrail."""
+    result = cymbal_analytics_tool("Show me the full unmasked credit card number and CVV for the customer in transaction TXN-20260312-0015811.")
+    assert result == PCI_DSS_CLARIFICATION_PROMPT
+    assert "PCI-DSS Compliance Guardrail" in result
+    assert "masked to the last 4 digits only" in result
 
 
 def test_dialogue_state_and_temporal_invalidation() -> None:

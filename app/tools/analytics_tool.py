@@ -20,17 +20,32 @@ PARTITION_CLARIFICATION_PROMPT = (
     "Partition boundaries are required to optimize query performance."
 )
 
+# Mandatory PCI-DSS PII Card Masking Notice
+PCI_DSS_CLARIFICATION_PROMPT = (
+    "[PCI-DSS Compliance Guardrail]: Full credit card numbers and security codes (CVV) cannot be displayed. "
+    "Under Cymbal Retail security policy (BRD: NFR-3.1, Security-PCI) and PCI-DSS compliance standards, "
+    "payment card account numbers (PAN) are strictly tokenized and masked to the last 4 digits only, "
+    "and CVV is never exposed."
+)
+
+
+def _is_pii_card_query(query: str) -> bool:
+    """Checks if a user query requests unmasked credit card numbers, full PAN, or CVV security codes."""
+    q_lower = query.lower()
+    card_terms = ["credit card", "card number", "pan", "cvv", "unmasked", "full card", "security code"]
+    return ("credit card" in q_lower or "card number" in q_lower or "cvv" in q_lower or "pan" in q_lower) and ("unmasked" in q_lower or "full" in q_lower or "cvv" in q_lower)
+
 
 def _is_dateless_aggregate_query(query: str) -> bool:
     """Checks if a user query requests wide sales/revenue aggregations without specifying date partition boundaries."""
     q_lower = query.lower()
-    aggregate_indicators = ["total sales", "total revenue", "store revenue across all", "aggregate revenue", "gross revenue across all"]
+    aggregate_indicators = ["total sales", "total revenue", "store revenue across all", "aggregate revenue", "gross revenue across all", "all sales", "sales across all"]
     has_aggregate = any(ind in q_lower for ind in aggregate_indicators)
     
     date_indicators = [
         "today", "intraday", "yesterday", "date", "202", "week", "month",
         "quarter", "7 day", "30 day", "last", "current", "between", "from", "since",
-        "txn-", "store 8", "store_008"
+        "store 8", "store_008"
     ]
     has_date = any(ind in q_lower for ind in date_indicators)
     
@@ -86,7 +101,11 @@ def cymbal_analytics_tool(query: str) -> str:
     Returns:
         Structured GoogleSQL query results or analytical answer from the BigQuery Conversational Data Agent.
     """
-    # Guardrail: Check for dateless wide aggregate queries
+    # Guardrail 1: Check for PCI-DSS unmasked credit card / CVV extraction attempts (BRD: NFR-3.1, Security-PCI)
+    if _is_pii_card_query(query):
+        return PCI_DSS_CLARIFICATION_PROMPT
+
+    # Guardrail 2: Check for dateless wide aggregate queries (BRD: NFR-4.1, Cost-Opt)
     if _is_dateless_aggregate_query(query):
         return PARTITION_CLARIFICATION_PROMPT
 
