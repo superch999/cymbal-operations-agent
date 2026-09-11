@@ -1,0 +1,5 @@
+sources:
+  bigtable_source:
+    type: bigtable
+    project: haochi-data-advanced
+    instance: operations-db
