@@ -1,7 +1,7 @@
 name: "cymbal-operations-agent"
 acli_version: "1.2.1"
 agent_directory: "app"
-region: "us-east1"
+region: "us-central1"
 base_template: "adk"
 generated_at: "2026-09-10T06:50:47.574914+00:00"
 language: "python"
